@@ -42,6 +42,12 @@ public class ClientesController extends HttpServlet {
 			case "insertar": 
 				insertar(request, response);
 				break;
+			case "editar": 
+				obtener(request, response);
+				break;
+			case "modificar": 
+				modificar(request, response);
+				break;
 			}
 			
 		} catch (Exception e) {
@@ -91,5 +97,41 @@ public class ClientesController extends HttpServlet {
 			System.out.println("insertar() " + e.getMessage());
 		}
 	}	
+	
+	protected void obtener(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try {
+			int idcliente = Integer.parseInt(request.getParameter("idcliente"));
+			Cliente cliente = clientesModel.listarClientePorId(idcliente);
+			
+			if(cliente != null) {
+				request.setAttribute("cliente", cliente);
+				request.getRequestDispatcher("/clientes/editarCliente.jsp").forward(request, response);
+			}
+		} catch (Exception e) {
+			System.out.println("obtener() " + e.getMessage());
+		}
+	}
+	
+	protected void modificar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try {
+			int idcliente = Integer.parseInt(request.getParameter("idcliente"));
+			Cliente cliente = new Cliente();
+			cliente.setIdcliente(idcliente);
+			cliente.setNombres(request.getParameter("nombres"));
+			cliente.setApellidos(request.getParameter("apellidos"));
+			cliente.setDni(request.getParameter("dni"));
+			cliente.setFechaNacimiento(request.getParameter("fechaNacimiento"));
+			cliente.setDireccion(request.getParameter("direccion"));
+			
+			if(clientesModel.modificarCliente(cliente) > 0) {
+				request.getSession().setAttribute("exito", "cliente modificado");
+			}else {
+				request.getSession().setAttribute("exito", "cliente NO modificado");
+			}
+			response.sendRedirect(request.getContextPath() + "/ClientesController?operacion=listar");
+		} catch (Exception e) {
+			System.out.println("modificar() " + e.getMessage());
+		}
+	}
 
 }

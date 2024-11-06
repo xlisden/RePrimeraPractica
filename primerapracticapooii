@@ -18,52 +18,14 @@ USE `primerapracticapooii`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `cliente`
---
-
-DROP TABLE IF EXISTS `cliente`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `cliente` (
-  `idcliente` int NOT NULL AUTO_INCREMENT,
-  `nombres` varchar(45) DEFAULT NULL,
-  `apellidos` varchar(45) DEFAULT NULL,
-  `dni` varchar(8) DEFAULT NULL,
-  `fechaNacimiento` date DEFAULT NULL,
-  `direccion` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`idcliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `cliente`
 --
 
 LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES (1,'Juan','Pérez','12345678','1988-07-19','Av. Siempre Viva 742'),(2,'María','González','87654321','2000-02-21','Calle Falsa 123'),(3,'Carlos','López','23456789','1995-09-23','Boulevard de los Sueños 456'),(4,'Ana','Martínez','34567890','1985-03-22','Paseo de la Reforma 789'),(5,'Luis','Hernández','45678901','1900-02-24','Calle del Sol 101'),(6,'Juanita','Alcachofa','12349348','2001-01-12','Jr. Río Tumbes 235'),(7,'Teilor','Eswuit','12395156','1989-12-13','No tengo ni idea'),(8,'Bruno','Marte','02982231','1999-12-24','Tampoco tengo idea');
+INSERT INTO `cliente` VALUES (1,'Anita','Huerfanita','03834542','1988-07-19','Jr Los Rosales 234'),(2,'Marco','Gonzales','03834542','2000-02-21','Av El sol 234'),(3,'Pedro','Garcia','03834542','1995-09-23','Jr Rio Tumbes 235'),(4,'Diana','Spencer','03834542','1985-03-22','En el mas alla'),(5,'Java','C++','03834542','1900-02-24','Jr Las Frutas 269'),(6,'Juan','Torres','03834542','2001-01-12','Av No se 234'),(7,'Bruno','Marte','03834542','1989-12-13','En Washington'),(8,'Paula','Perez','03834542','1999-12-24','Jr Libertad 345');
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `prestamo`
---
-
-DROP TABLE IF EXISTS `prestamo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `prestamo` (
-  `idprestamo` int NOT NULL AUTO_INCREMENT,
-  `fechaPrestamo` date DEFAULT NULL,
-  `monto` decimal(10,2) DEFAULT NULL,
-  `idcliente` int DEFAULT NULL,
-  `interes` int DEFAULT NULL,
-  `nroCuotas` int DEFAULT NULL,
-  PRIMARY KEY (`idprestamo`),
-  KEY `idcliente_idx` (`idcliente`),
-  CONSTRAINT `idcliente` FOREIGN KEY (`idcliente`) REFERENCES `cliente` (`idcliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `prestamo`
@@ -71,7 +33,7 @@ CREATE TABLE `prestamo` (
 
 LOCK TABLES `prestamo` WRITE;
 /*!40000 ALTER TABLE `prestamo` DISABLE KEYS */;
-INSERT INTO `prestamo` VALUES (1,'2024-11-01',10000.00,1,5,12),(2,'2024-10-01',15000.00,1,6,24),(3,'2024-11-02',20000.00,3,4,18),(4,'2024-11-02',25000.00,1,7,36),(5,'2024-11-05',30000.00,5,5,10),(6,'2024-11-05',10000.00,1,5,12),(7,'2024-09-05',15000.00,3,10,24),(8,'2024-11-02',20000.00,3,4,18),(9,'2024-11-09',28000.00,4,7,36),(10,'2024-11-04',30000.00,5,5,10),(11,'2024-11-06',12000.00,8,4,18),(12,'2024-11-01',12000.00,NULL,10,12),(13,'2024-11-01',12000.00,NULL,10,12),(14,'2024-11-01',12000.00,NULL,10,12),(15,'2024-11-01',12000.00,NULL,10,12),(16,'2024-11-01',12000.00,NULL,10,12),(17,'2024-11-01',12000.00,NULL,10,12),(18,'2024-11-01',12000.00,NULL,10,12),(19,'2024-11-01',12000.00,NULL,10,12),(20,'2024-11-01',12000.00,NULL,10,12),(21,'2024-11-01',12000.00,NULL,10,12),(22,'2024-11-01',12000.00,NULL,10,12),(23,'2024-11-01',12000.00,4,10,12);
+INSERT INTO `prestamo` VALUES (1,'2024-01-01',12000.00,7,5,10),(25,'2024-01-01',12345.00,3,6,12);
 /*!40000 ALTER TABLE `prestamo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -300,6 +262,29 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spReadPrestamoPorId` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spReadPrestamoPorId`(
+	IN idprestamo INT
+)
+BEGIN
+	SELECT *
+    FROM prestamo p
+    WHERE p.idprestamo = idprestamo;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `spReadPrestamos` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -347,6 +332,74 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spUpdateCliente` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spUpdateCliente`(
+	IN idcliente INT,
+	IN nombres VARCHAR(45),
+    IN apellidos VARCHAR(45),
+    IN dni VARCHAR(8),
+    IN fechaNaciemiento VARCHAR(45),
+    IN direccion VARCHAR(100)
+)
+BEGIN
+	UPDATE `primerapracticapooii`.`cliente`
+	SET
+	`nombres` = nombres,
+	`apellidos` = apellidos,
+	`dni` = dni,
+	`fechaNacimiento` = STR_TO_DATE(fechaNacimiento, '%Y-%m-%d'),
+	`direccion` = direccion
+	WHERE `cliente`.`idcliente` = idcliente;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spUpdatePrestamo` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spUpdatePrestamo`(
+	IN idprestamo INT,
+	IN fechaPrestamo VARCHAR(45),
+    IN monto INT,
+    IN idcliente INT,
+    IN interes INT,
+    IN nroCuotas INT
+)
+BEGIN
+
+	UPDATE `primerapracticapooii`.`prestamo`
+	SET
+	`fechaPrestamo` = STR_TO_DATE(fechaPrestamo, '%Y-%m-%d'),
+	`monto` = monto,
+	`idcliente` = idcliente,
+	`interes` = interes,
+	`nroCuotas` = nroCuotas
+	WHERE `prestamo`.`idprestamo` = idprestamo;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -357,4 +410,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-05 20:56:57
+-- Dump completed on 2024-11-06 16:18:47

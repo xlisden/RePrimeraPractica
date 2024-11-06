@@ -8,6 +8,25 @@
 <meta charset="UTF-8">
 <title>Listar clientes</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+<script>
+	function verPrestamos(id){
+		if(confirm("¿Desea ver los préstamos del cliente?") == true){
+			location.href = "PrestamosController?operacion=listar&idcliente=" + id;
+		}
+	}
+	function modificarCliente(id){
+		if(confirm("¿Desea modificar el cliente?") == true){
+			location.href = "ClientesController?operacion=editar&idcliente=" + id;
+		}
+	}
+	function eliminarCliente(id){
+		if(confirm("¿Desea eliminar el cliente?") == true){
+// 			location.href = "ClientesController?operacion=listar&idcliente=" + id;
+		}
+	}
+</script>
+
 </head>
 <body>
 
@@ -44,9 +63,9 @@
   			<td><%= cliente.getFechaNacimiento() %></td>
   			<td><%= cliente.getDireccion() %></td>
   			<td>
-  				<a class="btn btn-outline-warning" > Editar </a>
-  				<a class="btn btn-outline-danger" > Eliminar </a>
-  				<a href="<%=url%>PrestamosController?operacion=listar&idcliente=<%=cliente.getIdcliente()%>" class="btn btn-outline-info" > Prestamos </a>
+  				<a href="javascript:modificarCliente(<%=cliente.getIdcliente()%>)" class="btn btn-outline-warning" > Editar </a>
+  				<a href="javascript:eliminarCliente(<%=cliente.getIdcliente()%>)" class="btn btn-outline-danger" > Eliminar </a>
+  				<a href="javascript:verPrestamos(<%=cliente.getIdcliente()%>)" class="btn btn-outline-info" > Prestamos </a>
 			</td>
   		</tr>
   		<%	

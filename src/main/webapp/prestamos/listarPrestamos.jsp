@@ -8,16 +8,30 @@
 <meta charset="UTF-8">
 <title>Listar prestamos por cliente</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<script>
+	function pedirPrestamo(id){
+		if(confirm("¿Desea pedir un préstamo?") == true){
+			location.href = "PrestamosController?operacion=nuevo&idcliente=" + id;
+		}
+	}
+	function modificarPrestamo(id){
+		if(confirm("¿Desea modificar el préstamo?") == true){
+			location.href = "PrestamosController?operacion=editar&idprestamo=" + id;
+		}
+	}
+</script>
 </head>
 <body>
 
 <% String url = "http://localhost:8080/RePrimeraPractica/"; %>
 <% List<Prestamo> prestamos = (List<Prestamo>) request.getAttribute("prestamos"); %>
-<% %>
+<% int idcliente = (int)request.getAttribute("idcliente");%>
+<%  %>
 
 <div class="container">
   <br>
-  <a href="<%=url%>PrestamosController?operacion=nuevo&nomCliente=<%=prestamos.getFirst().getCliente()%>" class="btn btn-primary"> Nuevo prestamo </a>
+  <a href="javascript:pedirPrestamo(<%=idcliente%>)" class="btn btn-primary"> Nuevo prestamo </a>
+  <a href="<%=url%>ClientesController?operacion=listar" class="btn btn-info"> Volver a los clientes </a>
   <br> <p></p>
   <table id="tabla" class="table table-bordered">
   	<thead>
@@ -44,8 +58,8 @@
   			<td><%= prestamo.getInteres() %></td>
   			<td><%= prestamo.getNroCuotas() %></td>
   			<td>
-  				<a class="btn btn-outline-warning" > Editar </a>
-  				<a class="btn btn-outline-danger" > Eliminar </a>
+  				<a href="javascript:modificarPrestamo(<%=prestamo.getIdprestamo()%>)" class="btn btn-outline-warning" > Editar </a>
+  				<a href="javascript:eliminarPrestamo(<%=prestamo.getIdprestamo()%>)" class="btn btn-outline-danger" > Eliminar </a>
 			</td>
   		</tr>
   		<%	

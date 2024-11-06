@@ -44,7 +44,6 @@ public class PrestamosModel {
 	}
 	
 	public int insertarPrestamo(Prestamo prestamo) {
-		System.out.println("en insertar prestamo");
 		int filasAfectadas = 0;
 		try {
 			String sql = "CALL spCreatePrestamoId(?, ?, ?, ?, ?);";
@@ -56,8 +55,6 @@ public class PrestamosModel {
 			cs.setInt(4, prestamo.getInteres());
 			cs.setInt(5, prestamo.getNroCuotas());
 			filasAfectadas = cs.executeUpdate();
-			System.out.println(prestamo.getCliente() + " cliente");
-			System.out.println(filasAfectadas + "filas afectadas");
 			if(filasAfectadas == 0) {
 				System.out.println("Insercion en prestamo fallido.");
 			}
@@ -68,4 +65,54 @@ public class PrestamosModel {
 		}
 		return filasAfectadas;
 	}	
+	
+	public Prestamo listarPrestamoPorId(int idprestamo) {
+		Prestamo prestamo = null;
+		try {
+			String sql = "CALL spReadPrestamoPorId(?);";
+			conexion = Conexion.openConnection();
+			cs = conexion.prepareCall(sql);
+			cs.setInt(1, idprestamo);
+			rs = cs.executeQuery();
+			
+			while(rs.next()) {
+				prestamo = new Prestamo();
+				prestamo.setIdprestamo(rs.getInt("idprestamo"));
+				prestamo.setFechaPrestamo(rs.getString("fechaPrestamo"));
+				prestamo.setMonto(rs.getDouble("monto"));
+				prestamo.setIdcliente(rs.getInt("idcliente"));
+				prestamo.setInteres(rs.getInt("interes"));
+				prestamo.setNroCuotas(rs.getInt("nroCuotas"));
+			}
+			
+			conexion = Conexion.closeConnection();
+		} catch (Exception e) {
+			System.out.println("listarPrestamoPorId() " + e.getMessage());
+		}
+		return prestamo;
+	}
+	
+	public int modificarPrestamo(Prestamo prestamo) {
+		int filasAfectadas = 0;
+		try {
+			String sql = "CALL spUpdatePrestamo(?, ?, ?, ?, ?, ?);";
+			conexion = Conexion.openConnection();
+			cs = conexion.prepareCall(sql);
+			cs.setInt(1, prestamo.getIdprestamo());
+			cs.setString(2, prestamo.getFechaPrestamo());
+			cs.setDouble(3, prestamo.getMonto());
+			cs.setInt(4, prestamo.getIdcliente());
+			cs.setInt(5, prestamo.getInteres());
+			cs.setInt(6, prestamo.getNroCuotas());
+			filasAfectadas = cs.executeUpdate();
+			if(filasAfectadas == 0) {
+				System.out.println("Modificar en prestamo fallido.");
+			}
+			
+			conexion = Conexion.closeConnection();
+		} catch (Exception e) {
+			System.out.println("modificarPrestamo() " + e.getMessage());
+		}
+		return filasAfectadas;
+	}
 }

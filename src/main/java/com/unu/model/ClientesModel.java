@@ -22,8 +22,8 @@ public class ClientesModel {
 			conexion = Conexion.openConnection();
 			cs = conexion.prepareCall(sql);
 			rs = cs.executeQuery();
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				Cliente cliente = new Cliente();
 				cliente.setIdcliente(rs.getInt("idcliente"));
 				cliente.setNombres(rs.getString("nombres"));
@@ -33,14 +33,14 @@ public class ClientesModel {
 				cliente.setDireccion(rs.getString("direccion"));
 				clientes.add(cliente);
 			}
-			
+
 			conexion = Conexion.closeConnection();
 		} catch (Exception e) {
 			System.out.println("listarClientes() " + e.getMessage());
 		}
 		return clientes;
 	}
-	
+
 	public int insertarCliente(Cliente cliente) {
 		int filasAfectadas = 0;
 		try {
@@ -53,11 +53,11 @@ public class ClientesModel {
 			cs.setString(4, cliente.getFechaNacimiento());
 			cs.setString(5, cliente.getDireccion());
 			filasAfectadas = cs.executeUpdate();
-			
-			if(filasAfectadas == 0) {
+
+			if (filasAfectadas == 0) {
 				System.out.println("Insercion en cliente fallido.");
 			}
-			
+
 			conexion = Conexion.closeConnection();
 		} catch (Exception e) {
 			System.out.println("insertarCliente() " + e.getMessage());
@@ -73,11 +73,11 @@ public class ClientesModel {
 			conexion = Conexion.openConnection();
 			cs = conexion.prepareCall(sql);
 			rs = cs.executeQuery();
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				String cliente = rs.getString("cliente");
 			}
-			
+
 			conexion = Conexion.closeConnection();
 		} catch (Exception e) {
 			System.out.println("listarClientesPorNombres() " + e.getMessage());
@@ -93,8 +93,8 @@ public class ClientesModel {
 			cs = conexion.prepareCall(sql);
 			cs.setInt(1, idcliente);
 			rs = cs.executeQuery();
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				cliente = new Cliente();
 				cliente.setIdcliente(rs.getInt("idcliente"));
 				cliente.setNombres(rs.getString("nombres"));
@@ -103,7 +103,7 @@ public class ClientesModel {
 				cliente.setFechaNacimiento(rs.getString("fechaNacimiento"));
 				cliente.setDireccion(rs.getString("direccion"));
 			}
-			
+
 			conexion = Conexion.closeConnection();
 		} catch (Exception e) {
 			System.out.println("listarClientePorId() " + e.getMessage());
@@ -111,29 +111,54 @@ public class ClientesModel {
 		return cliente;
 	}
 
-	public Cliente listarClientePorNombre(String nomCliente) {
-		Cliente cliente = null;
+//	public Cliente listarClientePorNombre(String nomCliente) {
+//		Cliente cliente = null;
+//		try {
+//			String sql = "CALL spReadClientesPorNombre(?);";
+//			conexion = Conexion.openConnection();
+//			cs = conexion.prepareCall(sql);
+//			cs.setString(1, nomCliente);
+//			rs = cs.executeQuery();
+//			
+//			if(rs.next()) {
+//				cliente = new Cliente();
+//				cliente.setIdcliente(rs.getInt("idcliente"));
+//				cliente.setNombres(rs.getString("nombres"));
+//				cliente.setApellidos(rs.getString("apellidos"));
+//				cliente.setDni(rs.getString("dni"));
+//				cliente.setFechaNacimiento(rs.getString("fechaNacimiento"));
+//				cliente.setDireccion(rs.getString("direccion"));
+//			}
+//			
+//			conexion = Conexion.closeConnection();
+//		} catch (Exception e) {
+//			System.out.println("listarClientePorNombre() " + e.getMessage());
+//		}
+//		return cliente;
+//	}
+
+	public int modificarCliente(Cliente cliente) {
+		int filasAfectadas = 0;
 		try {
-			String sql = "CALL spReadClientesPorNombre(?);";
+			String sql = "CALL spUpdateCliente(?, ?, ?, ?, ?, ?);";
 			conexion = Conexion.openConnection();
 			cs = conexion.prepareCall(sql);
-			cs.setString(1, nomCliente);
-			rs = cs.executeQuery();
-			
-			if(rs.next()) {
-				cliente = new Cliente();
-				cliente.setIdcliente(rs.getInt("idcliente"));
-				cliente.setNombres(rs.getString("nombres"));
-				cliente.setApellidos(rs.getString("apellidos"));
-				cliente.setDni(rs.getString("dni"));
-				cliente.setFechaNacimiento(rs.getString("fechaNacimiento"));
-				cliente.setDireccion(rs.getString("direccion"));
+			cs.setInt(1, cliente.getIdcliente());
+			cs.setString(2, cliente.getNombres());
+			cs.setString(3, cliente.getApellidos());
+			cs.setString(4, cliente.getDni());
+			cs.setString(5, cliente.getFechaNacimiento());
+			cs.setString(6, cliente.getDireccion());
+			filasAfectadas = cs.executeUpdate();
+
+			if (filasAfectadas == 0) {
+				System.out.println("Modificacion en cliente fallido.");
 			}
-			
+
 			conexion = Conexion.closeConnection();
 		} catch (Exception e) {
-			System.out.println("listarClientePorNombre() " + e.getMessage());
+			System.out.println("modificarCliente() " + e.getMessage());
 		}
-		return cliente;
+		return filasAfectadas;
 	}
 }
