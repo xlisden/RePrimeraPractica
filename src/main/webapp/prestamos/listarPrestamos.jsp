@@ -15,9 +15,10 @@
 <% List<Prestamo> prestamos = (List<Prestamo>) request.getAttribute("prestamos"); %>
 <% %>
 
-
 <div class="container">
   <br>
+  <a href="<%=url%>PrestamosController?operacion=nuevo&nomCliente=<%=prestamos.getFirst().getCliente()%>" class="btn btn-primary"> Nuevo prestamo </a>
+  <br> <p></p>
   <table id="tabla" class="table table-bordered">
   	<thead>
   		<tr>
@@ -26,7 +27,7 @@
   			<th> Monto </th>
   			<th> Cliente </th>
   			<th> Interes </th>
-  			<th> Cuotas </th>
+  			<th> Nro cuotas </th>
   			<th> Operaciones </th>
   		</tr>
   	</thead>

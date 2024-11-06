@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `primerapracticapooii` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `primerapracticapooii`;
 -- MySQL dump 10.13  Distrib 8.0.40, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: primerapracticapooii
@@ -30,7 +32,7 @@ CREATE TABLE `cliente` (
   `fechaNacimiento` date DEFAULT NULL,
   `direccion` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`idcliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +41,7 @@ CREATE TABLE `cliente` (
 
 LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES (1,'Juan','Pérez','12345678',NULL,'Av. Siempre Viva 742'),(2,'María','González','87654321',NULL,'Calle Falsa 123'),(3,'Carlos','López','23456789',NULL,'Boulevard de los Sueños 456'),(4,'Ana','Martínez','34567890',NULL,'Paseo de la Reforma 789'),(5,'Luis','Hernández','45678901',NULL,'Calle del Sol 101');
+INSERT INTO `cliente` VALUES (1,'Juan','Pérez','12345678','1988-07-19','Av. Siempre Viva 742'),(2,'María','González','87654321','2000-02-21','Calle Falsa 123'),(3,'Carlos','López','23456789','1995-09-23','Boulevard de los Sueños 456'),(4,'Ana','Martínez','34567890','1985-03-22','Paseo de la Reforma 789'),(5,'Luis','Hernández','45678901','1900-02-24','Calle del Sol 101'),(6,'Juanita','Alcachofa','12349348','2001-01-12','Jr. Río Tumbes 235'),(7,'Teilor','Eswuit','12395156','1989-12-13','No tengo ni idea'),(8,'Bruno','Marte','02982231','1999-12-24','Tampoco tengo idea');
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -60,7 +62,7 @@ CREATE TABLE `prestamo` (
   PRIMARY KEY (`idprestamo`),
   KEY `idcliente_idx` (`idcliente`),
   CONSTRAINT `idcliente` FOREIGN KEY (`idcliente`) REFERENCES `cliente` (`idcliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -69,7 +71,7 @@ CREATE TABLE `prestamo` (
 
 LOCK TABLES `prestamo` WRITE;
 /*!40000 ALTER TABLE `prestamo` DISABLE KEYS */;
-INSERT INTO `prestamo` VALUES (1,'2024-11-01',10000.00,1,5,12),(2,'2024-10-01',15000.00,1,6,24),(3,'2024-11-02',20000.00,3,4,18),(4,'2024-11-02',25000.00,1,7,36),(5,'2024-11-05',30000.00,5,5,10),(6,'2024-11-05',10000.00,1,5,12),(7,'2024-09-05',15000.00,3,10,24),(8,'2024-11-02',20000.00,3,4,18),(9,'2024-11-09',28000.00,4,7,36),(10,'2024-11-04',30000.00,5,5,10);
+INSERT INTO `prestamo` VALUES (1,'2024-11-01',10000.00,1,5,12),(2,'2024-10-01',15000.00,1,6,24),(3,'2024-11-02',20000.00,3,4,18),(4,'2024-11-02',25000.00,1,7,36),(5,'2024-11-05',30000.00,5,5,10),(6,'2024-11-05',10000.00,1,5,12),(7,'2024-09-05',15000.00,3,10,24),(8,'2024-11-02',20000.00,3,4,18),(9,'2024-11-09',28000.00,4,7,36),(10,'2024-11-04',30000.00,5,5,10),(11,'2024-11-06',12000.00,8,4,18),(12,'2024-11-01',12000.00,NULL,10,12),(13,'2024-11-01',12000.00,NULL,10,12),(14,'2024-11-01',12000.00,NULL,10,12),(15,'2024-11-01',12000.00,NULL,10,12),(16,'2024-11-01',12000.00,NULL,10,12),(17,'2024-11-01',12000.00,NULL,10,12),(18,'2024-11-01',12000.00,NULL,10,12),(19,'2024-11-01',12000.00,NULL,10,12),(20,'2024-11-01',12000.00,NULL,10,12),(21,'2024-11-01',12000.00,NULL,10,12),(22,'2024-11-01',12000.00,NULL,10,12),(23,'2024-11-01',12000.00,4,10,12);
 /*!40000 ALTER TABLE `prestamo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -102,7 +104,7 @@ BEGIN
 	`fechaNacimiento`,
 	`direccion`)
 	VALUES
-    (0, nombres, apellidos, dni, fechaNacimiento, direccion);
+    (0, nombres, apellidos, dni, STR_TO_DATE(fechaNacimiento, '%Y-%m-%d'), direccion);
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -170,9 +172,8 @@ BEGIN
     SET @idcliente = (
 		SELECT idcliente
 		FROM cliente c
-        WHERE c.nombres = nomCliente
+        WHERE CONCAT(c.nombres, ' ', c.apellidos) = nomCliente
     );
-
 	INSERT INTO `primerapracticapooii`.`prestamo`
 	(`idprestamo`,
 	`fechaPrestamo`,
@@ -193,6 +194,29 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spReadClientePorId` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spReadClientePorId`(
+	IN idcliente INT
+)
+BEGIN
+	SELECT *
+    FROM cliente c
+    WHERE c.idcliente = idcliente;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `spReadClientes` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -207,6 +231,69 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spReadClientes`()
 BEGIN
 	SELECT *
     FROM cliente;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spReadClientesNombres` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spReadClientesNombres`()
+BEGIN
+	SELECT CONCAT(c.nombres, ' ', c.apellidos) as cliente
+    FROM cliente c;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spReadClientesPorNombre` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spReadClientesPorNombre`(
+	IN nomCliente VARCHAR(45)
+)
+BEGIN
+	SELECT *
+    FROM cliente c
+	WHERE  CONCAT(c.nombres, ' ', c.apellidos) = nomCliente;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `spReadClientesPorNombres` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spReadClientesPorNombres`()
+BEGIN
+	SELECT CONCAT(c.nombres, ' ', c.apellidos) as cliente
+    FROM cliente c;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -270,4 +357,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-05 16:09:15
+-- Dump completed on 2024-11-05 20:56:57

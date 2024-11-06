@@ -19,7 +19,7 @@
 		<input type="hidden" name="operacion" value="insertar"> <p></p>
 		<input type="text" name="nombres" placeholder="Nombres" class="form-control"> <p></p>
 		<input type="text" name="apellidos" placeholder="Apellidos" class="form-control"> <p></p>
-		<input type="number" name="dni" placeholder="DNI" class="form-control" maxlength="8"> <p></p>
+		<input type="number" name="dni" placeholder="DNI" class="form-control"> <p></p>
 		<input type="text" name="fechaNacimiento" placeholder="yyyy-mm-dd" class="form-control"> <p></p>
 		<input type="text" name="direccion" placeholder="Direccion" class="form-control"> <p></p>
 		<br>
