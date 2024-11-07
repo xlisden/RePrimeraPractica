@@ -50,6 +50,9 @@ public class PrestamosController extends HttpServlet {
 			case "modificar": 
 				modificar(request, response);
 				break;
+			case "eliminar": 
+				eliminar(request, response);
+				break;
 			}
 			
 		} catch (Exception e) {
@@ -140,7 +143,7 @@ public class PrestamosController extends HttpServlet {
 			int idprestamo = Integer.parseInt(request.getParameter("idprestamo"));
 			request.setAttribute("idcliente", idcliente);
 			Prestamo prestamo = new Prestamo();
-			prestamo.setIdcliente(idprestamo);
+			prestamo.setIdprestamo(idprestamo);
 			prestamo.setFechaPrestamo(request.getParameter("fechaPrestamo"));
 			prestamo.setMonto(Double.parseDouble(request.getParameter("monto")));
 			prestamo.setIdcliente(idcliente);
@@ -157,5 +160,23 @@ public class PrestamosController extends HttpServlet {
 			System.out.println("modificar() " + e.getMessage());
 		}
 	}	
+	
+	protected void eliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try {
+			int idcliente = Integer.parseInt(request.getParameter("idcliente"));
+			int idprestamo = Integer.parseInt(request.getParameter("idprestamo"));
+			request.setAttribute("idcliente", idcliente);
+			
+			if(prestamosModel.eliminarPrestamo(idprestamo) > 0) {
+				request.getSession().setAttribute("exito", "prestamo eliminado");
+			}else {
+				request.getSession().setAttribute("fracaso", "prestamo NO eliminado");
+			}
+			
+			response.sendRedirect(request.getContextPath() + "/PrestamosController?operacion=listar&idcliente=" + idcliente);
+		} catch (Exception e) {
+			System.out.println("eliminar() " + e.getMessage());
+		}
+	}
 	
 }

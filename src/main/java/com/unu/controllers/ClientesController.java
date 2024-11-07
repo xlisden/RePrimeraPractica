@@ -48,6 +48,9 @@ public class ClientesController extends HttpServlet {
 			case "modificar": 
 				modificar(request, response);
 				break;
+			case "eliminar": 
+				eliminar(request, response);
+				break;
 			}
 			
 		} catch (Exception e) {
@@ -131,6 +134,21 @@ public class ClientesController extends HttpServlet {
 			response.sendRedirect(request.getContextPath() + "/ClientesController?operacion=listar");
 		} catch (Exception e) {
 			System.out.println("modificar() " + e.getMessage());
+		}
+	}
+	
+	protected void eliminar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try {
+			int idcliente = Integer.parseInt(request.getParameter("idcliente"));
+			
+			if(clientesModel.eliminarCliente(idcliente) > 0){
+				request.getSession().setAttribute("exito", "cliente eliminado");
+			}else {
+				request.getSession().setAttribute("exito", "cliente NO eliminado");
+			}
+			request.getRequestDispatcher("/ClientesController?operacion=listar").forward(request, response);
+		} catch (Exception e) {
+			System.out.println("obtener() " + e.getMessage());
 		}
 	}
 

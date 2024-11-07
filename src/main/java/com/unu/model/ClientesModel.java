@@ -161,4 +161,24 @@ public class ClientesModel {
 		}
 		return filasAfectadas;
 	}
+	
+	public int eliminarCliente(int idcliente) {
+		int filasAfectadas = 0;
+		try {
+			String sql = "CALL spDeleteCliente(?);";
+			conexion = Conexion.openConnection();
+			cs = conexion.prepareCall(sql);
+			cs.setInt(1, idcliente);
+			filasAfectadas = cs.executeUpdate();
+
+			if (filasAfectadas == 0) {
+				System.out.println("Eliminacion en cliente fallido.");
+			}
+
+			conexion = Conexion.closeConnection();
+		} catch (Exception e) {
+			System.out.println("eliminarCliente() " + e.getMessage());
+		}
+		return filasAfectadas;
+	}	
 }

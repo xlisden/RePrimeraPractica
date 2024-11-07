@@ -22,7 +22,7 @@
 	}
 	function eliminarCliente(id){
 		if(confirm("¿Desea eliminar el cliente?") == true){
-// 			location.href = "ClientesController?operacion=listar&idcliente=" + id;
+			location.href = "ClientesController?operacion=eliminar&idcliente=" + id;
 		}
 	}
 </script>

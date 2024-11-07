@@ -10,13 +10,18 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <script>
 	function pedirPrestamo(id){
-		if(confirm("¿Desea pedir un préstamo?") == true){
+		if(confirm("¿Desea pedir un préstamo?")){
 			location.href = "PrestamosController?operacion=nuevo&idcliente=" + id;
 		}
 	}
 	function modificarPrestamo(id){
-		if(confirm("¿Desea modificar el préstamo?") == true){
+		if(confirm("¿Desea modificar el préstamo?")){
 			location.href = "PrestamosController?operacion=editar&idprestamo=" + id;
+		}
+	}
+	function eliminarPrestamo(idprestamo, idcliente){
+		if(confirm("¿Desea eliminar el préstamo?")){
+			location.href = "PrestamosController?operacion=eliminar&idprestamo=" + idprestamo + "&idcliente=" + idcliente;
 		}
 	}
 </script>
@@ -59,7 +64,7 @@
   			<td><%= prestamo.getNroCuotas() %></td>
   			<td>
   				<a href="javascript:modificarPrestamo(<%=prestamo.getIdprestamo()%>)" class="btn btn-outline-warning" > Editar </a>
-  				<a href="javascript:eliminarPrestamo(<%=prestamo.getIdprestamo()%>)" class="btn btn-outline-danger" > Eliminar </a>
+  				<a href="javascript:eliminarPrestamo(<%=prestamo.getIdprestamo()%>, <%=prestamo.getIdcliente()%>)" class="btn btn-outline-danger" > Eliminar </a>
 			</td>
   		</tr>
   		<%	

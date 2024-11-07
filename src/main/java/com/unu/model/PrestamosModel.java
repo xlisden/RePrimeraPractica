@@ -30,6 +30,7 @@ public class PrestamosModel {
 				prestamo.setIdprestamo(rs.getInt("idprestamo"));
 				prestamo.setFechaPrestamo(rs.getString("fechaPrestamo"));
 				prestamo.setMonto(rs.getDouble("monto"));
+				prestamo.setIdcliente(idcliente);
 				prestamo.setCliente(rs.getString("cliente"));
 				prestamo.setInteres(rs.getInt("interes"));
 				prestamo.setNroCuotas(rs.getInt("nroCuotas"));
@@ -115,4 +116,25 @@ public class PrestamosModel {
 		}
 		return filasAfectadas;
 	}
+	
+	public int eliminarPrestamo(int idprestamo) {
+		int filasAfectadas = 0;
+		try {
+			String sql = "CALL spDeletePrestamo(?);";
+			conexion = Conexion.openConnection();
+			cs = conexion.prepareCall(sql);
+			cs.setInt(1, idprestamo);
+			filasAfectadas = cs.executeUpdate();
+			
+			if(filasAfectadas == 0) {
+				System.out.println("Eliminacion en prestamo fallido.");
+			}
+			
+			conexion = Conexion.closeConnection();
+		} catch (Exception e) {
+			System.out.println("eliminarPrestamo() " + e.getMessage());
+		}
+		return filasAfectadas;
+	}	
+	
 }
